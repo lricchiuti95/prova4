@@ -116,7 +116,7 @@ public abstract class Any implements Iterable<Any> {
 	public <T> T bindTo(T obj) {
 		T oggetto = null;
 		if (object() instanceof Class<?>) {
-			oggetto =  object();
+			oggetto = obj;
 		}
 		return oggetto;
 	}
@@ -128,7 +128,7 @@ public abstract class Any implements Iterable<Any> {
 	public <T> T bindTo(TypeLiteral<T> typeLiteral, T obj) {
 		T oggetto = null;
 		if (object() instanceof TypeLiteral<?>) {
-			oggetto = (T) object();
+			oggetto = obj;
 		}
 		return oggetto;
 	}
@@ -160,7 +160,7 @@ public abstract class Any implements Iterable<Any> {
 	public <T> T as(Class<T> clazz) {
 		T oggetto = null;
 		if (object() instanceof Class<?>) {
-			oggetto = (T) object();
+			oggetto = (T) clazz;
 		}
 		return oggetto;
 	}
@@ -172,7 +172,7 @@ public abstract class Any implements Iterable<Any> {
 	public <T> T as(TypeLiteral<T> typeLiteral) {
 		T oggetto = null;
 		if (object() instanceof TypeLiteral<?>) {
-			oggetto = (T) object();
+			oggetto = (T) typeLiteral ;
 		}
 		return oggetto;
 	}
