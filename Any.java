@@ -116,7 +116,7 @@ public abstract class Any implements Iterable<Any> {
 	public <T> T bindTo(T obj) {
 		T oggetto = null;
 		if (object() instanceof Class<?>) {
-			oggetto = (T) object();
+			oggetto =  object();
 		}
 		return oggetto;
 	}
