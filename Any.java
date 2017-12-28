@@ -172,7 +172,7 @@ public abstract class Any implements Iterable<Any> {
 	public <T> T as(TypeLiteral<T> typeLiteral) {
 		T oggetto = null;
 		if (object() instanceof TypeLiteral<?>) {
-			oggetto = (T) typeLiteral ;
+			oggetto = (T) typeLiteral;
 		}
 		return oggetto;
 	}
