@@ -116,11 +116,16 @@ class CodegenImplObjectHash {
 		return (int) hash;
 	}
 
-	private static void appendBindingSet(StringBuilder lines, ClassDescriptor desc, Binding binding) {
+	private static Object appendBindingSet(StringBuilder lines, ClassDescriptor desc, Binding binding) {
 		append(lines, String.format("_%s_ = %s;", binding.name, CodegenImplNative.genField(binding)));
-		return lines.append("_%s_ = %s;");
+		return appendBindingSet(lines, String.format("_%s_ = %s;", binding.name, CodegenImplNative.genField(binding)));
 	}
+	
 
+	private static Object appendBindingSet(StringBuilder lines, String format) {
+		// TODO Auto-generated method stub
+		return null;
+	
 	static void appendWrappers(List<WrapperDescriptor> wrappers, StringBuilder lines) {
 		for (WrapperDescriptor wrapper : wrappers) {
 			lines.append("obj.");
