@@ -118,7 +118,7 @@ class CodegenImplObjectHash {
 
 	private static void appendBindingSet(StringBuilder lines, ClassDescriptor desc, Binding binding) {
 		append(lines, String.format("_%s_ = %s;", binding.name, CodegenImplNative.genField(binding)));
-		return;
+		return lines.append("_%s_ = %s;");
 	}
 
 	static void appendWrappers(List<WrapperDescriptor> wrappers, StringBuilder lines) {
