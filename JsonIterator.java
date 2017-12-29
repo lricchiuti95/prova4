@@ -542,7 +542,7 @@ public class JsonIterator implements Closeable {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			throw iter.reportError("deserialize", "premature end");
 		} catch (IOException e) {
-			throw new JsonException(e);
+			throw new JsonException("Error : IOException");
 		} finally {
 			JsonIteratorPool.returnJsonIterator(iter);
 		}
