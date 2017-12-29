@@ -31,7 +31,7 @@ class ReflectionObjectDecoder {
 		} catch (JsonException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new JsonException(("Error: Exception"););
+			throw new JsonException("Error: Exception");
 		}
 	}
 
@@ -121,7 +121,7 @@ class ReflectionObjectDecoder {
 			} catch (RuntimeException e) {
 				throw e;
 			} catch (Exception e) {
-				throw new JsonException(e);
+				throw new JsonException("Error: Exception");
 			}
 		}
 

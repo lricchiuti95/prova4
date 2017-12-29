@@ -89,7 +89,7 @@ class Codegen {
 				String msg = "failed to generate decoder for: " + classInfo + " with "
 						+ Arrays.toString(classInfo.typeArgs) + ", exception: " + e;
 				msg = msg + "\n" + source;
-				throw new JsonException("Error : Exception");
+				throw new JsonException("Error: Exception");
 			}
 		} finally {
 			JsoniterSpi.addNewDecoder(cacheKey, decoder);
@@ -118,7 +118,7 @@ class Codegen {
 						}
 					}
 				} catch (InterruptedException e) {
-					throw new JsonException("Error: InterruptedException");
+					throw new JsonException("Error : InterruptedException");
 				}
 				return decoder.decode(iter);
 			}

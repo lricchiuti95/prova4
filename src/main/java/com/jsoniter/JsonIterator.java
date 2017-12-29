@@ -472,10 +472,9 @@ public class JsonIterator implements Closeable {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			throw iter.reportError("deserialize", "premature end");
 		} catch (IOException e) {
-			throw new JsonException("Error : IOException" );
+			throw new JsonException("Error: IOException");
 		} finally {
 			JsonIteratorPool.returnJsonIterator(iter);
-			
 		}
 	}
 
@@ -542,7 +541,7 @@ public class JsonIterator implements Closeable {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			throw iter.reportError("deserialize", "premature end");
 		} catch (IOException e) {
-			throw new JsonException("Error : IOException");
+			throw new JsonException("Error: IOException");
 		} finally {
 			JsonIteratorPool.returnJsonIterator(iter);
 		}
@@ -574,7 +573,7 @@ public class JsonIterator implements Closeable {
 		} catch (JsonException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new JsonException("Error: IOException");
+			throw new JsonException("Error: Exception");
 		}
 	}
 }
