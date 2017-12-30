@@ -67,6 +67,7 @@ public abstract class Any implements Iterable<Any> {
 	}
 
 	/**
+	 * wrapArray.
 	 * 
 	 * @param val
 	 * @return
@@ -83,27 +84,28 @@ public abstract class Any implements Iterable<Any> {
 	 */
 	public interface EntryIterator {
 		/**
-		 * 	boolean next();
+		 *boolean next();
+		 * 
+		 * @author MaxiBon
+		 *
+		 */
+		boolean next();
+		/**
+		 *String key();
 		 * 
 		 * @author MaxiBon
 		 *
 		 */
 		
-		boolean next();
+
+		String key();
 		/**
-		 * 	String key();
+		 *Any value();
 		 * 
 		 * @author MaxiBon
 		 *
 		 */
 
-		String key();
-		/**
-		 * 	Any value();
-		 * 
-		 * @author MaxiBon
-		 *
-		 */
 		Any value();
 	}
 
@@ -171,7 +173,7 @@ public abstract class Any implements Iterable<Any> {
 	public <T> T bindTo(TypeLiteral<T> typeLiteral, T obj) {
 		T oggetto = null;
 		if (object() instanceof TypeLiteral<?>) {
-			oggetto =  bindTo( typeLiteral , obj);
+			oggetto = bindTo(typeLiteral, obj);
 		}
 		return oggetto;
 	}
@@ -187,7 +189,7 @@ public abstract class Any implements Iterable<Any> {
 		if (object() instanceof Map<?, ?>) {
 			map = (Map<String, Any>) object();
 		}
-			
+
 		return map;
 	}
 
@@ -196,7 +198,7 @@ public abstract class Any implements Iterable<Any> {
 		if (object() instanceof List<?>) {
 			list = (List<Any>) object();
 		}
-			
+
 		return list;
 	}
 
@@ -430,11 +432,11 @@ public abstract class Any implements Iterable<Any> {
 		if (this == o) {
 			return true;
 		}
-			
+
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-			
+
 		if (o instanceof Any) {
 			Any any = (Any) o;
 			Object obj = this.object();
