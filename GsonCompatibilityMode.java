@@ -238,8 +238,10 @@ public class GsonCompatibilityMode extends Config {
 			}
 				
 			if (fieldNamingStrategy != null ? !fieldNamingStrategy.equals(builder.fieldNamingStrategy) 
-				: builder.fieldNamingStrategy != null)
+				: builder.fieldNamingStrategy != null) {
 				return false;
+			}
+				
 			
 					
 			

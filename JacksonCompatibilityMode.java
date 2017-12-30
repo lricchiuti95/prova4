@@ -25,9 +25,9 @@ public class JacksonCompatibilityMode extends Config {
 	 */
     public static class Builder extends Config.Builder {
         public JacksonCompatibilityMode build() {
-        	if(build() != null)  super.build();{
+        	if(build() != null)  super.build();
         		
-        	}
+        	
             return (JacksonCompatibilityMode) super.build();
         }
 
