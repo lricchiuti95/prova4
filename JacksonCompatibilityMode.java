@@ -23,11 +23,12 @@ public class JacksonCompatibilityMode extends Config {
 	 * @author MaxiBon
 	 *
 	 */
-    public static class Builder extends Config.Builder {
+	public static class Builder extends Config.Builder {
         public JacksonCompatibilityMode build() {
-        	if(build() != null)  super.build();{
-        		 return (JacksonCompatibilityMode) super.build();
+        	if(build() != null)  {
+        		return (JacksonCompatibilityMode) super.build();  
         	}
+			return null;
         		
         	
            
