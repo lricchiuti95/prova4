@@ -83,6 +83,12 @@ public class NamingStrategySupport {
 			return resultLength > 0 ? result.toString() : input;
 		}
 	};
+	/**
+	 * public static NamingStrategy UPPER_CAMEL_CASE = new NamingStrategy()
+	 * 
+	 * @author MaxiBon
+	 *
+	 */
 
 	public static NamingStrategy UPPER_CAMEL_CASE = new NamingStrategy() {
 		@Override
