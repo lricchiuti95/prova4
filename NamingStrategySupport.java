@@ -46,6 +46,12 @@ public class NamingStrategySupport {
 			});
 		}
 	}
+	/**
+	 * public static NamingStrategy SNAKE_CASE = new NamingStrategy()
+	 * 
+	 * @author MaxiBon
+	 *
+	 */
 
 	public static NamingStrategy SNAKE_CASE = new NamingStrategy() {
 		@Override
