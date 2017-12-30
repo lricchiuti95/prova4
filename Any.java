@@ -4,7 +4,7 @@ import com.jsoniter.output.CodegenAccess;
 import com.jsoniter.spi.JsonException;
 import com.jsoniter.ValueType;
 import com.jsoniter.output.JsonStream;
-import com.jsoniter.spi.Encoder;
+import com.jsoniter.*;
 import com.jsoniter.spi.TypeLiteral;
 
 import java.io.IOException;
