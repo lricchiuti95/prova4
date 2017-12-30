@@ -107,6 +107,12 @@ public class NamingStrategySupport {
 			return sb.toString();
 		}
 	};
+	/**
+	 * public static NamingStrategy LOWER_CASE = new NamingStrategy() 
+	 * 
+	 * @author MaxiBon
+	 *
+	 */
 
 	public static NamingStrategy LOWER_CASE = new NamingStrategy() {
 		@Override
@@ -115,7 +121,7 @@ public class NamingStrategySupport {
 		}
 	};
 	/**
-	 * public static NamingStrategy LOWER_CASE = new NamingStrategy() 
+	 * public static NamingStrategy KEBAB_CASE = new NamingStrategy()
 	 * 
 	 * @author MaxiBon
 	 *
