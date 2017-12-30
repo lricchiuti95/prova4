@@ -114,6 +114,12 @@ public class NamingStrategySupport {
 			return input.toLowerCase();
 		}
 	};
+	/**
+	 * public static NamingStrategy LOWER_CASE = new NamingStrategy() 
+	 * 
+	 * @author MaxiBon
+	 *
+	 */
 
 	public static NamingStrategy KEBAB_CASE = new NamingStrategy() {
 		@Override
