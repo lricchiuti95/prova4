@@ -90,9 +90,20 @@ public abstract class Any implements Iterable<Any> {
 		 */
 		
 		boolean next();
+		/**
+		 * 	String key();
+		 * 
+		 * @author MaxiBon
+		 *
+		 */
 
 		String key();
-
+		/**
+		 * 	Any value();
+		 * 
+		 * @author MaxiBon
+		 *
+		 */
 		Any value();
 	}
 
