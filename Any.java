@@ -2,7 +2,7 @@ package com.jsoniter.any;
 
 import com.jsoniter.output.CodegenAccess;
 import com.jsoniter.spi.JsonException;
-
+import com.jsoniter.JsonIterator;
 import com.jsoniter.ValueType;
 import com.jsoniter.output.JsonStream;
 import com.jsoniter.spi.Encoder;
@@ -153,15 +153,19 @@ public abstract class Any implements Iterable<Any> {
 
 	public Map<String, Any> asMap() {
 		Map<String, Any> map = null;
-		if (object() instanceof Map<?, ?>)
+		if (object() instanceof Map<?, ?>) {
 			map = (Map<String, Any>) object();
+		}
+			
 		return map;
 	}
 
 	public List<Any> asList() {
 		List<Any> list = null;
-		if (object() instanceof List<?>)
+		if (object() instanceof List<?>) {
 			list = (List<Any>) object();
+		}
+			
 		return list;
 	}
 
@@ -392,10 +396,14 @@ public abstract class Any implements Iterable<Any> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+			
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
+			
 		if (o instanceof Any) {
 			Any any = (Any) o;
 			Object obj = this.object();

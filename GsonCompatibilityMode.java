@@ -21,7 +21,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
-
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -208,32 +208,54 @@ public class GsonCompatibilityMode extends Config {
 
 		@Override
 		public boolean equals(Object o) {
-			if (this == o)
+			if (this == o) {
 				return true;
-			if (o == null || getClass() != o.getClass())
+			}
+				
+			if (o == null || getClass() != o.getClass()) {
 				return false;
-			if (!super.equals(o))
+			}
+				
+			if (!super.equals(o)) {
 				return false;
+			}
+				
 			Builder builder = null;
 			if (o instanceof Builder) {
 				builder = (Builder) o;
 			}
 
-			if (excludeFieldsWithoutExposeAnnotation != builder.excludeFieldsWithoutExposeAnnotation)
+			if (excludeFieldsWithoutExposeAnnotation != builder.excludeFieldsWithoutExposeAnnotation) {
 				return false;
-			if (disableHtmlEscaping != builder.disableHtmlEscaping)
+			}
+				
+			if (disableHtmlEscaping != builder.disableHtmlEscaping) {
 				return false;
-			if (!dateFormat.get().equals(builder.dateFormat.get()))
+			}
+				
+			if (!dateFormat.get().equals(builder.dateFormat.get())) {
 				return false;
-			if (fieldNamingStrategy != null ? !fieldNamingStrategy.equals(builder.fieldNamingStrategy)
-					: builder.fieldNamingStrategy != null)
+			}
+				
+			if (fieldNamingStrategy != null ? !fieldNamingStrategy.equals(builder.fieldNamingStrategy) 
+				: builder.fieldNamingStrategy != null)
 				return false;
-			if (version != null ? !version.equals(builder.version) : builder.version != null)
+			
+					
+			
+				
+			
+				
+			if (version != null ? !version.equals(builder.version) : builder.version != null) {
 				return false;
+			}
+				
 			if (serializationExclusionStrategies != null
 					? !serializationExclusionStrategies.equals(builder.serializationExclusionStrategies)
-					: builder.serializationExclusionStrategies != null)
+					: builder.serializationExclusionStrategies != null) {
 				return false;
+			}
+				
 			return deserializationExclusionStrategies != null
 					? deserializationExclusionStrategies.equals(builder.deserializationExclusionStrategies)
 					: builder.deserializationExclusionStrategies == null;
