@@ -68,7 +68,8 @@ class StringLazyAny extends LazyAny {
 			CodegenAccess.nextToken(iter);
 			return iter.readInt();
 		} catch (IOException e) {
-			throw new JsonException("Error: IOException");
+			String err = "Error: IOException";
+			throw new JsonException(err);
 		} finally {
 			JsonIteratorPool.returnJsonIterator(iter);
 		}

@@ -67,8 +67,10 @@ class CodegenImplMap {
 		}
 		if (isCollectionValueNullable) {
 			ctx.append("if (entry.getValue() == null) { stream.writeNull(); } else {");
-			CodegenImplNative.genWriteOp(ctx, "entry.getValue()", valueType, true);
-			ctx.append("}");
+			String stringa = "entry.getValue()";
+			CodegenImplNative.genWriteOp(ctx, stringa, valueType, true);
+			String parentesi = "}";
+			ctx.append(parentesi);
 		} else {
 			CodegenImplNative.genWriteOp(ctx, "entry.getValue()", valueType, false);
 		}

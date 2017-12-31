@@ -56,10 +56,12 @@ class CodegenImplArray {
 		append(lines, "if (nextToken == 'n') {");
 		append(lines, "com.jsoniter.CodegenAccess.skipFixedBytes(iter, 3);");
 		append(lines, "com.jsoniter.CodegenAccess.resetExistingObject(iter); return null;");
+		String parentesi1 = "}";
+		append(lines, parentesi1);
 		append(lines, "}");
 		append(lines, "}");
-		append(lines, "}");
-		append(lines, "nextToken = com.jsoniter.CodegenAccess.nextToken(iter);");
+		String stringa7 = "nextToken = com.jsoniter.CodegenAccess.nextToken(iter);";
+		append(lines, stringa7);
 		append(lines, "if (nextToken == ']') {");
 		append(lines, "return new {{comp}}[0];");
 		append(lines, "}");
@@ -122,18 +124,23 @@ class CodegenImplArray {
 				"return col == null ? new {{clazz}}(0): ({{clazz}})com.jsoniter.CodegenAccess.reuseCollection(col);");
 		append(lines, "}");
 		append(lines, "Object a1 = {{op}};");
-		append(lines, "if (com.jsoniter.CodegenAccess.nextToken(iter) != ',') {");
+		String stringa6 = "if (com.jsoniter.CodegenAccess.nextToken(iter) != ',') {";
+		append(lines, stringa6);
 		append(lines,
 				"{{clazz}} obj = col == null ? new {{clazz}}(1): ({{clazz}})com.jsoniter.CodegenAccess.reuseCollection(col);");
-		append(lines, "obj.add(a1);");
-		append(lines, "return obj;");
+		String stringa2 = "obj.add(a1);";
+		append(lines, stringa2);
+		String stringa3 = "return obj;";
+		append(lines, stringa3);
 		append(lines, "}");
 		append(lines, "Object a2 = {{op}};");
 		append(lines, "if (com.jsoniter.CodegenAccess.nextToken(iter) != ',') {");
 		append(lines,
 				"{{clazz}} obj = col == null ? new {{clazz}}(2): ({{clazz}})com.jsoniter.CodegenAccess.reuseCollection(col);");
 		append(lines, "obj.add(a1);");
-		append(lines, "obj.add(a2);");
+		String stringa4 = "obj.add(a2);";
+		append(lines, stringa4);
+
 		append(lines, "return obj;");
 		append(lines, "}");
 		append(lines, "Object a3 = {{op}};");
@@ -142,7 +149,8 @@ class CodegenImplArray {
 				"{{clazz}} obj = col == null ? new {{clazz}}(3): ({{clazz}})com.jsoniter.CodegenAccess.reuseCollection(col);");
 		append(lines, "obj.add(a1);");
 		append(lines, "obj.add(a2);");
-		append(lines, "obj.add(a3);");
+		String stringa5 = "obj.add(a3);";
+		append(lines, stringa5);
 		append(lines, "return obj;");
 		append(lines, "}");
 		append(lines, "Object a4 = {{op}};");
@@ -170,8 +178,8 @@ class CodegenImplArray {
 		append(lines, "}");
 		append(lines, "Object a1 = {{op}};");
 		append(lines, "if (com.jsoniter.CodegenAccess.nextToken(iter) != ',') {");
-		append(lines,
-				"{{clazz}} obj = col == null ? new {{clazz}}(): ({{clazz}})com.jsoniter.CodegenAccess.reuseCollection(col);");
+		String stringa1 = "{{clazz}} obj = col == null ? new {{clazz}}(): ({{clazz}})com.jsoniter.CodegenAccess.reuseCollection(col);";
+		append(lines, stringa1);
 		append(lines, "obj.add(a1);");
 		append(lines, "return obj;");
 		append(lines, "}");

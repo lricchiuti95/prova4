@@ -121,7 +121,9 @@ class IterImpl {
 	final static void skipString(JsonIterator iter) throws IOException {
 		int end = IterImplSkip.findStringEnd(iter);
 		if (end == -1) {
-			throw iter.reportError("skipString", "incomplete string");
+			String stringa1 = "skipString";
+			String stringa2 = "incomplete string";
+			throw iter.reportError(stringa1, stringa2);
 		} else {
 			iter.head = end;
 		}
@@ -289,7 +291,9 @@ class IterImpl {
 						}
 						break;
 					default:
-						throw iter.reportError("readStringSlowPath", "invalid escape character: " + bc);
+						String stringa1 = "readStringSlowPath";
+						String stringa2 = "invalid escape character: " + bc;
+						throw iter.reportError(stringa1, stringa2);
 					}
 				} else if ((Integer
 						.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(bc)).longValue(),

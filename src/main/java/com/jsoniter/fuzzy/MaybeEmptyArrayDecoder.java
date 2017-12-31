@@ -1,10 +1,10 @@
 package com.jsoniter.fuzzy;
 
-import java.io.IOException;
-
 import com.jsoniter.JsonIterator;
 import com.jsoniter.ValueType;
+import com.jsoniter.spi.Decoder;
 
+import java.io.IOException;
 
 /**
  * Public Class MaybeEmptyArrayDecoder.
@@ -12,7 +12,7 @@ import com.jsoniter.ValueType;
  * @author MaxiBon
  *
  */
-public class MaybeEmptyArrayDecoder implements com.jsoniter.spi.Decoder {
+public class MaybeEmptyArrayDecoder implements Decoder {
 
     @Override
     /**

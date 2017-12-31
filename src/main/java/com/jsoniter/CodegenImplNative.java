@@ -258,7 +258,8 @@ class CodegenImplNative {
 		}
 		if (valueType == boolean.class) {
 			if (!(decoder instanceof Decoder.BooleanDecoder)) {
-				throw new JsonException("decoder for " + cacheKey + "must implement Decoder.BooleanDecoder");
+				String stringa = "decoder for " + cacheKey + "must implement Decoder.BooleanDecoder";
+				throw new JsonException(stringa);
 			}
 			return String.format("com.jsoniter.CodegenAccess.readBoolean(\"%s\", iter)", cacheKey);
 		}

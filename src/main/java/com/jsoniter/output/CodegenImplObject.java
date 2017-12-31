@@ -51,8 +51,9 @@ class CodegenImplObject {
 					ctx.append("if (entry.getValue() == null) { stream.writeNull(); } else {");
 					CodegenImplNative.genWriteOp(ctx, "entry.getValue()", unwrapper.mapValueTypeLiteral.getType(),
 							true);
-					ctx.append("}");
-					ctx.append("}");
+					String linea = "}";
+					ctx.append(linea);
+					ctx.append(linea);
 				} else {
 					notFirst = appendComma(ctx, notFirst);
 					ctx.append(String.format("obj.%s(stream);", unwrapper.method.getName()));

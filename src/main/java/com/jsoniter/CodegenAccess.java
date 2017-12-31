@@ -1,10 +1,14 @@
 package com.jsoniter;
 
-import com.jsoniter.spi.*;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+
+import com.jsoniter.spi.Decoder;
+import com.jsoniter.spi.JsoniterSpi;
+import com.jsoniter.spi.MapKeyDecoder;
+import com.jsoniter.spi.Slice;
+import com.jsoniter.spi.TypeLiteral;
 
 /**
  * Public class CodegenAccess. only uesd by generated code to access decoder.

@@ -20,7 +20,6 @@ import com.jsoniter.spi.GenericsHelper;
 import com.jsoniter.spi.JsonException;
 import com.jsoniter.spi.JsoniterSpi;
 import com.jsoniter.spi.TypeLiteral;
-
 /**
  * class Codegen
  * 

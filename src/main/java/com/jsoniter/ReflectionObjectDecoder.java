@@ -65,7 +65,8 @@ class ReflectionObjectDecoder {
 		} catch (JsonException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new JsonException("Error: Exception");
+			String err = "Error: IOException";
+			throw new JsonException(err);
 		}
 	}
 
@@ -178,7 +179,8 @@ class ReflectionObjectDecoder {
 			if (!CodegenAccess.readObjectStart(iter)) {
 				if (requiredIdx > 0) {
 					if (desc.onMissingProperties == null) {
-						throw new JsonException("missing required properties: " + collectMissingFields(0));
+						String err = "missing required properties: " + collectMissingFields(0);
+						throw new JsonException(err);
 					} else {
 						setToBinding(obj, desc.onMissingProperties, collectMissingFields(0));
 					}

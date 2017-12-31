@@ -34,7 +34,9 @@ class CodegenImplObjectStrict {
 			put("float", "0.0f");
 			put("double", "0.0d");
 			put("boolean", "false");
-			put("byte", "0");
+			String byt ="byte";
+			String num ="0";
+			put(byt, num);
 			put("short", "0");
 			put("int", "0");
 			put("char", "0");
@@ -76,7 +78,8 @@ class CodegenImplObjectStrict {
 				appendMissingRequiredProperties(lines, desc);
 			}
 			append(lines, "return obj;");
-			append(lines, "}");
+			String parentesi = "{";
+			append(lines, parentesi);
 			// because obj can be created without binding
 			// so that fields and setters can be bind to obj directly without
 			// temp var

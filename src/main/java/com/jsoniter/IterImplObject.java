@@ -32,7 +32,9 @@ class IterImplObject {
 				iter.unreadByte();
 				String field = iter.readString();
 				if (IterImpl.nextToken(iter) != ':') {
-					throw iter.reportError("readObject", "expect :");
+					String stringa1 = "readObject";
+					String stringa2 = "expect :";
+					throw iter.reportError(stringa1, stringa2);
 				}
 				return field;
 			}

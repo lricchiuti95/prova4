@@ -1,5 +1,6 @@
 package com.jsoniter.output;
 
+
 import com.jsoniter.spi.JsoniterSpi;
 
 /**
@@ -37,7 +38,8 @@ class CodegenResult {
 			appendBuffer();
 		}
 		lines.append(str);
-		lines.append("\n");
+		String linea = "\n";
+		lines.append(linea);
 	}
 
 	public void buffer(char c) {

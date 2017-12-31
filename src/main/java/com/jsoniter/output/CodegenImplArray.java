@@ -74,9 +74,12 @@ class CodegenImplArray {
 		ctx.append("int i = 0;");
 		ctx.append(String.format("%s e = arr[i++];", compType.getCanonicalName()));
 		if (isCollectionValueNullable) {
-			ctx.append("if (e == null) { stream.writeNull(); } else {");
-			CodegenImplNative.genWriteOp(ctx, "e", compType, true);
-			ctx.append("}"); // if
+			String stringa1 =  "if (e == null) { stream.writeNull(); } else {";
+			ctx.append(stringa1);
+			String stringa = "e";
+			CodegenImplNative.genWriteOp(ctx, stringa, compType, true);
+			String parentesi = "}";
+			ctx.append(parentesi); // if
 		} else {
 			CodegenImplNative.genWriteOp(ctx, "e", compType, false);
 		}

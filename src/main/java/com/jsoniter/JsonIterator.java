@@ -539,7 +539,9 @@ public class JsonIterator implements Closeable {
 		try {
 			T val = iter.read(clazz);
 			if (iter.head != lastNotSpacePos) {
-				throw iter.reportError("deserialize", "trailing garbage found");
+				String stringa1 = "deserialize";
+				String stringa2 = "trailing garbage found";
+				throw iter.reportError(stringa1, stringa2);
 			}
 			return val;
 		} catch (ArrayIndexOutOfBoundsException e) {

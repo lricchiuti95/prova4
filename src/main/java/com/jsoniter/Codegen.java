@@ -1,32 +1,15 @@
 package com.jsoniter;
 
+import com.jsoniter.spi.*;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.jsoniter.spi.Binding;
-import com.jsoniter.spi.ClassDescriptor;
-import com.jsoniter.spi.ClassInfo;
-import com.jsoniter.spi.Config;
-import com.jsoniter.spi.Decoder;
-import com.jsoniter.spi.DecodingMode;
-import com.jsoniter.spi.Extension;
-import com.jsoniter.spi.GenericsHelper;
-import com.jsoniter.spi.JsonException;
-import com.jsoniter.spi.JsoniterSpi;
-import com.jsoniter.spi.TypeLiteral;
+import java.lang.reflect.WildcardType;
+import java.util.*;
 
 /**
  * class Codegen
@@ -175,7 +158,7 @@ class Codegen {
 				typeArgs = pType.getActualTypeArguments();
 			}
 
-		} else if (type instanceof java.lang.reflect.WildcardType) {
+		} else if (type instanceof WildcardType) {
 			return Object.class;
 		} else {
 			if (type instanceof Class) {

@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import com.jsoniter.ValueType;
 import com.jsoniter.output.JsonStream;
+
+
+
 class FloatAny extends Any {
 
 	private float val;
