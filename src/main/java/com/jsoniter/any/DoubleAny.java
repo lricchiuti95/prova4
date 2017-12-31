@@ -1,10 +1,9 @@
 package com.jsoniter.any;
 
+import java.io.IOException;
+
 import com.jsoniter.ValueType;
 import com.jsoniter.output.JsonStream;
-import com.jsoniter.spi.TypeLiteral;
-
-import java.io.IOException;
 
 class DoubleAny extends Any {
 
