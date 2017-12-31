@@ -1,17 +1,16 @@
 package com.jsoniter.extra;
 
+import java.io.IOException;
+
 import com.jsoniter.CodegenAccess;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.SupportBitwise;
-import com.jsoniter.spi.Slice;
 import com.jsoniter.any.Any;
 import com.jsoniter.output.JsonStream;
 import com.jsoniter.spi.Decoder;
-import com.jsoniter.spi.Encoder;
 import com.jsoniter.spi.JsonException;
 import com.jsoniter.spi.JsoniterSpi;
-
-import java.io.IOException;
+import com.jsoniter.spi.Slice;
 
 /**
  * encode float/double as base64, faster than PreciseFloatSupport
@@ -77,7 +76,7 @@ public class Base64FloatSupport {
 			}
 			enabled = true;
 			enableDecoders();
-			JsoniterSpi.registerTypeEncoder(Double.class, new Encoder.ReflectionEncoder() {
+			JsoniterSpi.registerTypeEncoder(Double.class, new com.jsoniter.spi.Encoder.ReflectionEncoder() {
 				@Override
 				public void encode(Object obj, JsonStream stream) throws IOException {
 					Double number = null;
@@ -97,14 +96,14 @@ public class Base64FloatSupport {
 					return Any.wrap(number.doubleValue());
 				}
 			});
-			JsoniterSpi.registerTypeEncoder(double.class, new Encoder.DoubleEncoder() {
+			JsoniterSpi.registerTypeEncoder(double.class, new com.jsoniter.spi.Encoder.DoubleEncoder() {
 				@Override
 				public void encodeDouble(double obj, JsonStream stream) throws IOException {
 					long bits = Double.doubleToRawLongBits(obj);
 					Base64.encodeLongBits(bits, stream);
 				}
 			});
-			JsoniterSpi.registerTypeEncoder(Float.class, new Encoder.ReflectionEncoder() {
+			JsoniterSpi.registerTypeEncoder(Float.class, new com.jsoniter.spi.Encoder.ReflectionEncoder() {
 				@Override
 				public void encode(Object obj, JsonStream stream) throws IOException {
 					Float number = null;
@@ -129,7 +128,7 @@ public class Base64FloatSupport {
 					return null;
 				}
 			});
-			JsoniterSpi.registerTypeEncoder(float.class, new Encoder.FloatEncoder() {
+			JsoniterSpi.registerTypeEncoder(float.class, new com.jsoniter.spi.Encoder.FloatEncoder() {
 				@Override
 				public void encodeFloat(float obj, JsonStream stream) throws IOException {
 					long bits = Double.doubleToRawLongBits(obj);
