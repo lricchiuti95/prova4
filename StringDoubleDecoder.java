@@ -7,22 +7,21 @@ import com.jsoniter.JsonIterator;
 
 
 /**
- * Public Class MaybeStringDoubleDecoder.
+ * Public Class StringDoubleDecoder.
  * 
  * @author MaxiBon
  *
  */
-public class MaybeStringDoubleDecoder extends com.jsoniter.spi.Decoder.DoubleDecoder {
+public class StringDoubleDecoder extends com.jsoniter.spi.Decoder.DoubleDecoder {
 
     @Override
     /**
-     * decodeDouble
+     * decodeDouble.
      */
     public double decodeDouble(JsonIterator iter) throws IOException {
         byte c = CodegenAccess.nextToken(iter);
         if (c != '"') {
-            CodegenAccess.unreadByte(iter);
-            return iter.readDouble();
+            throw iter.reportError("StringDoubleDecoder", "expect \", but found: " + Byte.toString(c).charAt(0));
         }
         double val = iter.readDouble();
         c = CodegenAccess.nextToken(iter);

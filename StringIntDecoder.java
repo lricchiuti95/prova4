@@ -7,12 +7,12 @@ import com.jsoniter.JsonIterator;
 
 
 /**
- * Public Class MaybeStringIntDecoder.
+ * Public Class StringIntDecoder.
  * 
  * @author MaxiBon
  *
  */
-public class MaybeStringIntDecoder extends com.jsoniter.spi.Decoder.IntDecoder {
+public class StringIntDecoder extends com.jsoniter.spi.Decoder.IntDecoder {
 
     @Override
     /**
@@ -21,8 +21,7 @@ public class MaybeStringIntDecoder extends com.jsoniter.spi.Decoder.IntDecoder {
     public int decodeInt(JsonIterator iter) throws IOException {
         byte c = CodegenAccess.nextToken(iter);
         if (c != '"') {
-            CodegenAccess.unreadByte(iter);
-            return iter.readInt();
+            throw iter.reportError("StringIntDecoder", "expect \", but found: " + Byte.toString(c).charAt(0));
         }
         int val = iter.readInt();
         c = CodegenAccess.nextToken(iter);

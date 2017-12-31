@@ -7,12 +7,12 @@ import com.jsoniter.JsonIterator;
 
 
 /**
- * Public Class MaybeStringLongDecoder.
+ * Public Class StringLongDecoder.
  * 
  * @author MaxiBon
  *
  */
-public class MaybeStringLongDecoder extends com.jsoniter.spi.Decoder.LongDecoder {
+public class StringLongDecoder extends com.jsoniter.spi.Decoder.LongDecoder {
 
     @Override
     /**
@@ -21,8 +21,7 @@ public class MaybeStringLongDecoder extends com.jsoniter.spi.Decoder.LongDecoder
     public long decodeLong(JsonIterator iter) throws IOException {
         byte c = CodegenAccess.nextToken(iter);
         if (c != '"') {
-            CodegenAccess.unreadByte(iter);
-            return iter.readLong();
+            throw iter.reportError("StringLongDecoder", "expect \", but found: " + Byte.toString(c).charAt(0));
         }
         long val = iter.readLong();
         c = CodegenAccess.nextToken(iter);

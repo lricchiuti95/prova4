@@ -7,22 +7,21 @@ import com.jsoniter.JsonIterator;
 
 
 /**
- * Public Class MaybeStringShortDecoder.
+ * Public Class StringShortDecoder.
  * 
  * @author MaxiBon
  *
  */
-public class MaybeStringShortDecoder extends com.jsoniter.spi.Decoder.ShortDecoder {
+public class StringShortDecoder extends com.jsoniter.spi.Decoder.ShortDecoder {
 
     @Override
     /**
-     * decodeShort.
+     * decodeShort
      */
     public short decodeShort(JsonIterator iter) throws IOException {
         byte c = CodegenAccess.nextToken(iter);
         if (c != '"') {
-            CodegenAccess.unreadByte(iter);
-            return iter.readShort();
+            throw iter.reportError("StringShortDecoder", "expect \", but found: " + Byte.toString(c).charAt(0));
         }
         short val = iter.readShort();
         c = CodegenAccess.nextToken(iter);
