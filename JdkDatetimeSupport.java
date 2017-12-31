@@ -1,17 +1,8 @@
 package com.jsoniter.extra;
 
-import com.jsoniter.spi.JsonException;
-import com.jsoniter.JsonIterator;
-import com.jsoniter.any.Any;
-import com.jsoniter.output.JsonStream;
-import com.jsoniter.spi.Decoder;
-import com.jsoniter.spi.Encoder;
-import com.jsoniter.spi.JsoniterSpi;
-
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -20,6 +11,13 @@ import java.time.format.FormatStyle;
 import java.util.Date;
 import java.util.Locale;
 
+import com.jsoniter.JsonIterator;
+import com.jsoniter.any.Any;
+import com.jsoniter.output.JsonStream;
+import com.jsoniter.spi.Decoder;
+
+import com.jsoniter.spi.JsonException;
+import com.jsoniter.spi.JsoniterSpi;
 
 /**
  * there is no official way to encode/decode datetime, this is just an option
@@ -92,7 +90,7 @@ public class JdkDatetimeSupport {
 				throw new JsonException("JdkDatetimeSupport.enable can only be called once");
 			}
 			JdkDatetimeSupport.pattern = pattern;
-			JsoniterSpi.registerTypeEncoder(Date.class, new Encoder.ReflectionEncoder() {
+			JsoniterSpi.registerTypeEncoder(Date.class, new com.jsoniter.spi.Encoder.ReflectionEncoder() {
 				@Override
 				public void encode(Object obj, JsonStream stream) throws IOException {
 					stream.writeVal(get().format(obj));
