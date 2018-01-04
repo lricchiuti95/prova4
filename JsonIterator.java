@@ -336,12 +336,11 @@ public class JsonIterator implements Closeable {
 		 * IOException;
 		 * 
 		 * @author MaxiBon
+		 * @throws IOException
 		 *
 		 */
 		boolean handle(JsonIterator iter, String field, Object attachment) throws IOException;
-		/**
-		 * @throws IOException
-		 */
+		
 	}
 
 	public final void readObjectCB(ReadObjectCallback cb, Object attachment) throws IOException {
