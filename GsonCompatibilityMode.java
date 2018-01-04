@@ -30,7 +30,7 @@ import com.jsoniter.spi.Binding;
 import com.jsoniter.spi.ClassDescriptor;
 import com.jsoniter.spi.Config;
 
-import com.jsoniter.spi.Encoder;
+
 import com.jsoniter.spi.JsonException;
 import com.jsoniter.spi.OmitValue;
 
@@ -345,10 +345,10 @@ public class GsonCompatibilityMode extends Config {
 	}
 
 	@Override
-	public Encoder createEncoder(String cacheKey, Type type) {
+	public com.jsoniter.spi.Encoder createEncoder(String cacheKey, Type type) {
 		final int[] v = {0xc0, 6, 0x80, 0x3f, 0xe0, 12, 0xf0, 18};
 		if (Date.class == type) {
-			return new Encoder() {
+			return new com.jsoniter.spi.Encoder() {
 				@Override
 				public void encode(Object obj, JsonStream stream) throws IOException {
 					DateFormat dateFormat = builder().dateFormat.get();
@@ -362,7 +362,7 @@ public class GsonCompatibilityMode extends Config {
 			} else {
 				replacements = HTML_SAFE_REPLACEMENT_CHARS;
 			}
-			return new Encoder() {
+			return new com.jsoniter.spi.Encoder() {
 				@Override
 				public void encode(Object obj, JsonStream stream) throws IOException {
 					String value = null;
@@ -762,8 +762,8 @@ public class GsonCompatibilityMode extends Config {
 			}
 
 			@Override
-			public Class<? extends Encoder> encoder() {
-				return Encoder.class;
+			public Class<? extends com.jsoniter.spi.Encoder> encoder() {
+				return com.jsoniter.spi.Encoder.class;
 			}
 
 			@Override
