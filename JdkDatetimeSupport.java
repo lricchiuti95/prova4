@@ -83,9 +83,9 @@ public class JdkDatetimeSupport {
 	 * enable.
 	 * 
 	 * @param patterns
-	 * 
+	 * @throws IOException
 	 */
-	public static void enable(String patterns) {
+	public static void enable(String patterns) throws IOException {
 		 
 		synchronized (JdkDatetimeSupport.class) {
 			if (JdkDatetimeSupport.pattern != "") {
@@ -110,7 +110,6 @@ public class JdkDatetimeSupport {
 				}
 			});
 			JsoniterSpi.registerTypeDecoder(Date.class, new Decoder() {
-				@Override
 				public Object decode(JsonIterator iter) throws IOException {
 					try {
 						return get().parse(iter.readString());
