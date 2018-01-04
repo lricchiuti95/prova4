@@ -420,6 +420,9 @@ class IterImpl {
 	}
 	
 	//funzione di appoggio creata da frappe
+	/**
+     * @throws IOException
+     */
 	static final int supportReadInt (final JsonIterator iter, int ind) throws IOException {
 		
 		if (ind == IterImplNumber.INVALID_CHAR_FOR_NUMBER) {
