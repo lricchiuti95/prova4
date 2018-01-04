@@ -83,7 +83,7 @@ public class JdkDatetimeSupport {
 	 * enable.
 	 * 
 	 * @param patterns
-	 * @throws IOException è andato grazie aspe non puoi sapere se eclipse ti da errore
+	 * @throws JsonException 
 	 */
 	public static void enable(String patterns) throws JsonException {
 		 
