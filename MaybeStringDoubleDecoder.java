@@ -17,11 +17,10 @@ public class MaybeStringDoubleDecoder extends com.jsoniter.spi.Decoder.DoubleDec
     @Override
     /**
      * decodeDouble
+     *  @throws IOException
      */
     public double decodeDouble(JsonIterator iter) throws IOException {
-    	/**
-         * @throws IOException
-         */
+    	
         byte c = CodegenAccess.nextToken(iter);
         if (c != '"') {
             CodegenAccess.unreadByte(iter);
@@ -30,9 +29,7 @@ public class MaybeStringDoubleDecoder extends com.jsoniter.spi.Decoder.DoubleDec
         double val = iter.readDouble();
         c = CodegenAccess.nextToken(iter);
         if (c != '"') {
-        	/**
-             * @throws iter.reportError
-             */
+        	
             throw iter.reportError("StringDoubleDecoder", "expect \", but found: " + Byte.toString(c).charAt(0));
         }
         return val;

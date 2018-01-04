@@ -72,13 +72,13 @@ public class JsonIterator implements Closeable {
 	 * 
 	 */
 	private Type T;
-	
+
 	private final static ReadArrayCallback fillArray = new ReadArrayCallback() {
-		@Override
+		/**
+		 * @throws IOException
+		 */
 		public boolean handle(JsonIterator iter, Object attachment) throws IOException {
-			/**
-	         * @throws IOException
-	         */
+
 			if (attachment instanceof List) {
 				List list = (List) attachment;
 				list.add(iter.read());
@@ -93,7 +93,9 @@ public class JsonIterator implements Closeable {
 	final static String deserialize = "deserialize";
 
 	private final static ReadObjectCallback fillObject = new ReadObjectCallback() {
-		@Override
+		/**
+		 * @throws IOException
+		 */
 		public boolean handle(JsonIterator iter, String field, Object attachment) throws IOException {
 			if (attachment instanceof Map) {
 				Map map = (Map) attachment;
@@ -104,7 +106,6 @@ public class JsonIterator implements Closeable {
 
 		}
 	};
-
 
 	static {
 		for (int i = 0; i < valueTypes.length; i++) {
@@ -188,7 +189,9 @@ public class JsonIterator implements Closeable {
 		this.head = 0;
 		this.tail = 0;
 	}
-
+	/**
+	 * @throws IOException
+	 */
 	public final void close() throws IOException {
 		if (in != null) {
 			in.close();
@@ -223,7 +226,9 @@ public class JsonIterator implements Closeable {
 		String peek = new String(buf, peekStart, head - peekStart);
 		return "head: " + head + ", peek: " + peek + ", buf: " + new String(buf);
 	}
-
+	/**
+	 * @throws IOException
+	 */
 	public final boolean readNull() throws IOException {
 		byte c = IterImpl.nextToken(this);
 		if (c != 'n') {
@@ -234,7 +239,9 @@ public class JsonIterator implements Closeable {
 		IterImpl.skipFixedBytes(this, n); // null
 		return true;
 	}
-
+	/**
+	 * @throws IOException
+	 */
 	public final boolean readBoolean() throws IOException {
 		byte c = IterImpl.nextToken(this);
 		if ('t' == c) {
@@ -249,7 +256,9 @@ public class JsonIterator implements Closeable {
 		}
 		throw reportError("readBoolean", "expect t or f, found: " + c);
 	}
-
+	/**
+	 * @throws IOException
+	 */
 	public final short readShort() throws IOException {
 		int v = readInt();
 		if (Short.MIN_VALUE <= v && v <= Short.MAX_VALUE) {
@@ -258,19 +267,27 @@ public class JsonIterator implements Closeable {
 			throw reportError("readShort", "short overflow: " + v);
 		}
 	}
-
+	/**
+	 * @throws IOException
+	 */
 	public final int readInt() throws IOException {
 		return IterImplNumber.readInt(this);
 	}
-
+	/**
+	 * @throws IOException
+	 */
 	public final long readLong() throws IOException {
 		return IterImplNumber.readLong(this);
 	}
-
+	/**
+	 * @throws IOException
+	 */
 	public final boolean readArray() throws IOException {
 		return IterImplArray.readArray(this);
 	}
-
+	/**
+	 * @throws IOException
+	 */
 	public String readNumberAsString() throws IOException {
 		return IterImplForStreaming.readNumber(this);
 	}
@@ -283,16 +300,12 @@ public class JsonIterator implements Closeable {
 	 */
 	public static interface ReadArrayCallback {
 		/**
-		 * boolean handle(JsonIterator iter, Object attachment) throws
-		 * IOException;
+		 * boolean handle(JsonIterator iter, Object attachment) throws IOException;
 		 * 
 		 * @author MaxiBon
-		 *
+		 *@throws IOException
 		 */
 		boolean handle(JsonIterator iter, Object attachment) throws IOException;
-		/**
-         * @throws IOException
-         */
 	}
 
 	public final boolean readArrayCB(ReadArrayCallback callback, Object attachment) throws IOException {
@@ -319,16 +332,16 @@ public class JsonIterator implements Closeable {
 	 */
 	public static interface ReadObjectCallback {
 		/**
-		 * boolean handle(JsonIterator iter, String field, Object attachment)
-		 * throws IOException;
+		 * boolean handle(JsonIterator iter, String field, Object attachment) throws
+		 * IOException;
 		 * 
 		 * @author MaxiBon
 		 *
 		 */
 		boolean handle(JsonIterator iter, String field, Object attachment) throws IOException;
 		/**
-         * @throws IOException
-         */
+		 * @throws IOException
+		 */
 	}
 
 	public final void readObjectCB(ReadObjectCallback cb, Object attachment) throws IOException {
@@ -377,8 +390,6 @@ public class JsonIterator implements Closeable {
 		}
 	}
 
-	
-
 	public final Object read() throws IOException {
 		try {
 			ValueType valueType = whatIsNext();
@@ -394,7 +405,7 @@ public class JsonIterator implements Closeable {
 			case BOOLEAN:
 				return readBoolean();
 			case ARRAY:
-				List list = new ArrayList(n);				
+				List list = new ArrayList(n);
 				readArrayCB(fillArray, list);
 				return list;
 			case OBJECT:
@@ -411,8 +422,7 @@ public class JsonIterator implements Closeable {
 	}
 
 	/**
-	 * try to bind to existing object, returned object might not the same
-	 * instance
+	 * try to bind to existing object, returned object might not the same instance
 	 *
 	 * @param existingObjects
 	 *            the object instance to reuse
@@ -446,8 +456,7 @@ public class JsonIterator implements Closeable {
 	}
 
 	/**
-	 * try to bind to existing object, returned object might not the same
-	 * instance
+	 * try to bind to existing object, returned object might not the same instance
 	 *
 	 * @param typeLiteral1
 	 *            the type object
@@ -560,7 +569,7 @@ public class JsonIterator implements Closeable {
 		try {
 			T val = iter.read(clazz);
 			if (iter.head != lastNotSpacePos) {
-				
+
 				String stringa2 = "trailing garbage found";
 				throw iter.reportError(deserialize, stringa2);
 			}

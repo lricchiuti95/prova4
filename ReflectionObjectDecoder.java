@@ -173,11 +173,10 @@ class ReflectionObjectDecoder {
 
 		/**
 		 * decode
+		 * @throws IOException
 		 */
 		public Object decode(JsonIterator iter) throws IOException {
-			 /**
-	         * @throws IOException
-	         */
+			 
 			try {
 				return decode_(iter);
 			} catch (RuntimeException e) {
@@ -256,11 +255,10 @@ class ReflectionObjectDecoder {
 		@Override
 		/**
 		 * decode
+		 * @throws IOException
 		 */
 		public Object decode(JsonIterator iter) throws IOException {
-			 /**
-	         * @throws IOException
-	         */
+			 
 			try {
 				return decode_(iter);
 			} catch (RuntimeException e) {
@@ -354,11 +352,10 @@ class ReflectionObjectDecoder {
 		@Override
 		/**
 		 * decode
+		 * @throws IOException
 		 */
 		public Object decode(JsonIterator iter) throws IOException {
-			 /**
-	         * @throws IOException
-	         */
+			 
 			try {
 				return decode_(iter);
 			} catch (RuntimeException e) {

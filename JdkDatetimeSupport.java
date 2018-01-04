@@ -83,11 +83,10 @@ public class JdkDatetimeSupport {
 	 * enable.
 	 * 
 	 * @param patterns
+	 * @throws JsonException
 	 */
 	public static void enable(String patterns) {
-		 /**
-         * @throws JsonException
-         */
+		 
 		synchronized (JdkDatetimeSupport.class) {
 			if (JdkDatetimeSupport.pattern != "") {
 				

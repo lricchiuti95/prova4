@@ -17,11 +17,10 @@ public class MaybeStringFloatDecoder extends com.jsoniter.spi.Decoder.FloatDecod
 	@Override
 	/**
 	 * decodeFloat.
+	 *  @throws IOException
 	 */
 	public float decodeFloat(JsonIterator iter) throws IOException {
-		/**
-         * @throws IOException
-         */
+		
 		byte c = CodegenAccess.nextToken(iter);
 		if (c != '"') {
 			CodegenAccess.unreadByte(iter);
@@ -30,9 +29,6 @@ public class MaybeStringFloatDecoder extends com.jsoniter.spi.Decoder.FloatDecod
 		float val = iter.readFloat();
 		c = CodegenAccess.nextToken(iter);
 		if (c != '"') {
-			/**
-	         * @throws iter.reportError
-	         */
 			
 			throw iter.reportError("StringFloatDecoder", "expect \", but found: " + Byte.toString(c).charAt(0));
 		}
