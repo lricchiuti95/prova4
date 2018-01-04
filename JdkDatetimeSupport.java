@@ -83,8 +83,7 @@ public class JdkDatetimeSupport {
 	 * enable.
 	 * 
 	 * @param patterns
-	 * @throws JsonException
-	 * @throws IOException
+	 * 
 	 */
 	public static void enable(String patterns) {
 		 
@@ -98,6 +97,7 @@ public class JdkDatetimeSupport {
 				@Override
 				
 				/**
+				 *  encode.
 				 * @throws IOException
 				 */
 				public void encode(Object obj, JsonStream stream) throws IOException {
