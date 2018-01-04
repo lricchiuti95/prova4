@@ -293,18 +293,16 @@ public class JsonIterator implements Closeable {
 	}
 
 	/**
-	 * Public Interface ReadArrayCallback.
+	 * Public Interface ReadObjectCallback.
 	 * 
 	 * @author MaxiBon
-	 *
+	 * boolean handle(JsonIterator iter, String field, Object attachment)
+	 * throws IOException;
+	 * @author MaxiBon
+	 *@throws IOException
 	 */
 	public static interface ReadArrayCallback {
-		/**
-		 * boolean handle(JsonIterator iter, Object attachment) throws IOException;
-		 * 
-		 * @author MaxiBon
-		 *@throws IOException
-		 */
+		
 		boolean handle(JsonIterator iter, Object attachment) throws IOException;
 	}
 
