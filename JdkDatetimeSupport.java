@@ -97,6 +97,9 @@ public class JdkDatetimeSupport {
 			JsoniterSpi.registerTypeEncoder(Date.class, new com.jsoniter.spi.Encoder.ReflectionEncoder() {
 				@Override
 				
+				/**
+				 * @throws IOException
+				 */
 				public void encode(Object obj, JsonStream stream) throws IOException {
 					stream.writeVal(get().format(obj));
 				}
