@@ -127,7 +127,7 @@ public class JdkDatetimeSupport {
 	}
 
 	protected static DateFormat get() {
-		pattern.toString();
+		String pattern;
 		return null;
 	}
 }
