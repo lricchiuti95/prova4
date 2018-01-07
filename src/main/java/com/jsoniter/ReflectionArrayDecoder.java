@@ -16,6 +16,15 @@ class ReflectionArrayDecoder implements Decoder {
 
 	private final Class componentType;
 	private final Decoder compTypeDecoder;
+	
+	/**
+	 * numberVector
+	 */
+	final int[]  nV = {2, 3, 8,};
+	/**
+	 * subDecode
+	 */
+	final int[] sD = {1, 2, 3, 4};
 
 	/**
 	 * ReflectionArrayDecoder
@@ -27,6 +36,9 @@ class ReflectionArrayDecoder implements Decoder {
 		compTypeDecoder = Codegen.getDecoder(TypeLiteral.create(componentType).getDecoderCacheKey(), componentType);
 	}
 
+	/**
+	 * @see com.jsoniter.spi.Decoder#decode(com.jsoniter.JsonIterator)
+	 */
 	@Override
 	public Object decode(JsonIterator iter) throws IOException {
 		CodegenAccess.resetExistingObject(iter);
@@ -36,39 +48,66 @@ class ReflectionArrayDecoder implements Decoder {
 		if (!CodegenAccess.readArrayStart(iter)) {
 			return Array.newInstance(componentType, 0);
 		}
+		
+		if (CodegenAccess.nextToken(iter) != ',') {
+			return subDecode(sD[0], iter);
+		}
+		
+		if (CodegenAccess.nextToken(iter) != ',') {
+			return subDecode(sD[1], iter);
+		}
+		
+		if (CodegenAccess.nextToken(iter) != ',') {
+			return subDecode(sD[2], iter);
+		}
+		
+		Object arr = subDecode(sD[3], iter);		
+		int[] cond = whileSupport(arr, iter);
+		if (cond[0] == cond[1]) {
+			return arr;
+		}
+		Object newArr = Array.newInstance(componentType, cond[0]);
+		System.arraycopy(arr, 0, newArr, 0, cond[0]);
+		return newArr;
+	}
+	
+	Object subDecode(int i, JsonIterator iter) throws IOException {
+		
 		Object a1 = compTypeDecoder.decode(iter);
-		if (CodegenAccess.nextToken(iter) != ',') {
-			Object arr = Array.newInstance(componentType, 1);
-			Array.set(arr, 0, a1);
-			return arr;
-		}
 		Object a2 = compTypeDecoder.decode(iter);
-		if (CodegenAccess.nextToken(iter) != ',') {
-			int n47 = 2;
-			Object arr = Array.newInstance(componentType, n47);
-			Array.set(arr, 0, a1);
-			Array.set(arr, 1, a2);
-			return arr;
-		}
 		Object a3 = compTypeDecoder.decode(iter);
-		if (CodegenAccess.nextToken(iter) != ',') {
-			int n54 = 3;
-			Object arr = Array.newInstance(componentType, n54);
+		Object a4 = compTypeDecoder.decode(iter);		
+		Object arr = null;
+		
+		switch(i) {
+		case 1:
+			arr = Array.newInstance(componentType, 1);
+			Array.set(arr, 0, a1);
+			break;
+		case 2:
+			arr = Array.newInstance(componentType, nV[0]);
 			Array.set(arr, 0, a1);
 			Array.set(arr, 1, a2);
-			int n57 = 2;
-			Array.set(arr, n57, a3);
-			return arr;
+			break;
+		case 3:
+			arr = Array.newInstance(componentType, nV[1]);
+			Array.set(arr, 0, a1);
+			Array.set(arr, 1, a2);
+			Array.set(arr, nV[0], a3);
+			break;
+		default:
+			arr = Array.newInstance(componentType, nV[2]);
+			Array.set(arr, 0, a1);
+			Array.set(arr, 1, a2);
+			Array.set(arr, nV[0], a3);
+			Array.set(arr, nV[1], a4);
+			break;
 		}
-		Object a4 = compTypeDecoder.decode(iter);
-		int n61 = 8;
-		Object arr = Array.newInstance(componentType, n61);
-		Array.set(arr, 0, a1);
-		Array.set(arr, 1, a2);
-		int n64 = 2;
-		int n65 = 3;
-		Array.set(arr, n64, a3);
-		Array.set(arr, n65, a4);
+		return arr;
+	}
+	
+	int[] whileSupport(Object arr, JsonIterator iter) throws IOException {
+		
 		int i = 4;
 		int arrLen = 8;
 		byte b = CodegenAccess.nextToken(iter);
@@ -85,11 +124,8 @@ class ReflectionArrayDecoder implements Decoder {
 			b = CodegenAccess.nextToken(iter);
 			intero = b;
 		}
-		if (i == arrLen) {
-			return arr;
-		}
-		Object newArr = Array.newInstance(componentType, i);
-		System.arraycopy(arr, 0, newArr, 0, i);
-		return newArr;
+		
+		int[] result = {i, arrLen};
+		return result;
 	}
 }

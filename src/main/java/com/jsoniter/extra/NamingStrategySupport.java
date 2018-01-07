@@ -13,7 +13,9 @@ import com.jsoniter.spi.JsoniterSpi;
  *
  */
 public class NamingStrategySupport {
-
+	/**
+	 * NamingStrategySupport
+	 */
 	private NamingStrategySupport() {
 	}
 
@@ -34,6 +36,32 @@ public class NamingStrategySupport {
 		String translate(String input);
 	}
 
+	
+	/**
+	 * public NamingStrategy KEBAB_CASE = new NamingStrategy()
+	 * 
+	 * @author MaxiBon
+	 *
+	 */
+	public NamingStrategy kEBAB_CASE = new NamingStrategy() {
+		@Override
+		public String translate(String string) {
+			if (string == null) {
+				return string;
+			}
+
+			int length = string.length();
+			if (length == 0) {
+				return string;
+			}
+
+			return translateSuppKebab(string, length);
+
+		}
+	};
+	
+	
+
 	/**
 	 * public static NamingStrategy SNAKE_CASE = new NamingStrategy()
 	 * 
@@ -42,35 +70,12 @@ public class NamingStrategySupport {
 	 */
 	public static NamingStrategy SNAKE_CASE = new NamingStrategy() {
 		@Override
-		public String translate(String input) {
-			if (input == null) {
-				return input; // garbage in, garbage out
+		public String translate(String inp) {
+			if (inp == null) {
+				return inp; // garbage in, garbage out
 			}
+			return translateSuppSnake(inp);
 
-			int length = input.length();
-			int n = length*2;
-			StringBuilder result = new StringBuilder(n);
-			int resultLength = 0;
-			boolean wasPrevTranslated = false;
-			for (int i = 0; i < length; i++) {
-				char c = input.charAt(i);
-				if (i > 0 || c != '_') // skip first starting underscore
-				{
-					if (Character.isUpperCase(c)) {
-						if (!wasPrevTranslated && resultLength > 0 && result.charAt(resultLength - 1) != '_') {
-							result.append('_');
-							resultLength++;
-						}
-						c = Character.toLowerCase(c);
-						wasPrevTranslated = true;
-					} else {
-						wasPrevTranslated = false;
-					}
-					result.append(c);
-					resultLength++;
-				}
-			}
-			return resultLength > 0 ? result.toString() : input;
 		}
 	};
 
@@ -80,19 +85,19 @@ public class NamingStrategySupport {
 	 * @author MaxiBon
 	 *
 	 */
-	public NamingStrategy UPPER_CAMEL_CASE = new NamingStrategy() {
+	public NamingStrategy upperCamelCase = new NamingStrategy() {
 		@Override
-		public String translate(String input) {
-			if (input == null || input.length() == 0) {
-				return input; // garbage in, garbage out
+		public String translate(String inpu) {
+			if (inpu == null || inpu.length() == 0) {
+				return inpu; // garbage in, garbage out
 			}
 			// Replace first lower-case letter with upper-case equivalent
-			char c = input.charAt(0);
+			char c = inpu.charAt(0);
 			char uc = Character.toUpperCase(c);
 			if (c == uc) {
-				return input;
+				return inpu;
 			}
-			StringBuilder sb = new StringBuilder(input);
+			StringBuilder sb = new StringBuilder(inpu);
 			sb.setCharAt(0, uc);
 			return sb.toString();
 		}
@@ -104,58 +109,10 @@ public class NamingStrategySupport {
 	 * @author MaxiBon
 	 *
 	 */
-	public NamingStrategy LOWER_CASE = new NamingStrategy() {
+	public NamingStrategy lowerCase = new NamingStrategy() {
 		@Override
 		public String translate(String input) {
 			return input.toLowerCase();
-		}
-	};
-
-	/**
-	 * public NamingStrategy KEBAB_CASE = new NamingStrategy()
-	 * 
-	 * @author MaxiBon
-	 *
-	 */
-	public NamingStrategy KEBAB_CASE = new NamingStrategy() {
-		@Override
-		public String translate(String input) {
-			if (input == null) {
-				return input; // garbage in, garbage out
-			}
-
-			int length = input.length();
-			if (length == 0) {
-				return input;
-			}
-
-			StringBuilder result = new StringBuilder(length + (length >> 1));
-
-			int upperCount = 0;
-
-			for (int i = 0; i < length; ++i) {
-				char ch = input.charAt(i);
-				char lc = Character.toLowerCase(ch);
-
-				if (lc == ch) { // lower-case letter means we can get new word
-					// but need to check for multi-letter upper-case (acronym),
-					// where assumption
-					// is that the last upper-case char is start of a new word
-					if (upperCount > 1) {
-						// so insert hyphen before the last character now
-						result.insert(result.length() - 1, '-');
-					}
-					upperCount = 0;
-				} else {
-					// Otherwise starts new word, unless beginning of string
-					if ((upperCount == 0) && (i > 0)) {
-						result.append('-');
-					}
-					++upperCount;
-				}
-				result.append(lc);
-			}
-			return result.toString();
 		}
 	};
 
@@ -187,6 +144,69 @@ public class NamingStrategySupport {
 				}
 			});
 		}
+	}
+
+	/**
+	 * translateSuppKebab
+	 * 
+	 * @param stringa
+	 * @param l
+	 * @return
+	 */
+	public static String translateSuppKebab(String stringa, int l) {
+		StringBuilder result = new StringBuilder(l + (l >> 1));
+
+		int upperCount = 0;
+
+		for (int i = 0; i < l; ++i) {
+			char ch = stringa.charAt(i);
+			char lc = Character.toLowerCase(ch);
+
+			if (lc == ch) {
+				if (upperCount > 1) {
+					result.insert(result.length() - 1, '-');
+				}
+				upperCount = 0;
+			} else {
+				if ((upperCount == 0) && (i > 0)) {
+					result.append('-');
+				}
+				++upperCount;
+			}
+			result.append(lc);
+		}
+		return result.toString();
+	}
+	
+	/**
+	 * translateSuppSnake
+	 * 
+	 * @param in
+	 * @return
+	 */
+	public static String translateSuppSnake(String in) {
+		int n = in.length() * 2;
+		StringBuilder result = new StringBuilder(n);
+		int resultLength = 0;
+		boolean wasPrevTranslated = false;
+		for (int i = 0; i < n / 2; i++) {
+			char c = in.charAt(i);
+			if (i > 0 || c != '_') {
+				if (Character.isUpperCase(c)) {
+					if (!wasPrevTranslated && resultLength > 0 && result.charAt(resultLength - 1) != '_') {
+						result.append('_');
+						resultLength++;
+					}
+					c = Character.toLowerCase(c);
+					wasPrevTranslated = true;
+				} else {
+					wasPrevTranslated = false;
+				}
+				result.append(c);
+				resultLength++;
+			}
+		}
+		return resultLength > 0 ? result.toString() : in;
 	}
 
 }

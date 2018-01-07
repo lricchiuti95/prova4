@@ -56,13 +56,10 @@ class Codegen {
 	 */
 	static Decoder getDecoder(String cacheKey, Type type) {
 		Decoder decoder = JsoniterSpi.getDecoder(cacheKey);
-		Decoder dec = null;
 		if (decoder != null) {
-			dec = decoder;
-		} else {
-			dec = gen(cacheKey, type);
+			return decoder;
 		}
-		return dec;
+		return gen(cacheKey, type);
 	}
 
 	/**
@@ -103,12 +100,10 @@ class Codegen {
 	 * @param mode
 	 * @return
 	 */
-	private static Decoder genSupport(Decoder decoder, ClassInfo classInfo, DecodingMode mode) {
-		Decoder dec = decoder;
+	private static void genSupport(Decoder decoder, ClassInfo classInfo, DecodingMode mode) {
 		if (mode == DecodingMode.REFLECTION_MODE) {
-			dec = ReflectionDecoderFactory.create(classInfo);
+			decoder = ReflectionDecoderFactory.create(classInfo);
 		}
-		return dec;
 	}
 
 	/**
@@ -118,12 +113,11 @@ class Codegen {
 	 * @param mode
 	 * @return
 	 */
-	private static Decoder genSupport(Decoder decoder, String cacheKey, DecodingMode mode) {
-		Decoder dec = decoder;
+	private static void genSupport(Decoder decoder, String cacheKey, DecodingMode mode) {
 		if (isDoingStaticCodegen.outputDir == "") {
 			try {
 				if (Class.forName(cacheKey).newInstance() instanceof Decoder) {
-					dec = (Decoder) Class.forName(cacheKey).newInstance();
+					decoder = (Decoder) Class.forName(cacheKey).newInstance();
 				}
 			} catch (Exception e) {
 				if (mode == DecodingMode.STATIC_MODE) {
@@ -132,8 +126,6 @@ class Codegen {
 				}
 			}
 		}
-
-		return dec;
 	}
 
 	/**
@@ -173,10 +165,10 @@ class Codegen {
 		try {
 			Config currentConfig = JsoniterSpi.getCurrentConfig();
 			DecodingMode mode = currentConfig.decodingMode();
-			Decoder deco = genSupport(decoder, classInfo, mode);
-			Decoder dec = genSupport(deco, cacheKey, mode);
+			genSupport(decoder, classInfo, mode);
+			genSupport(decoder, cacheKey, mode);
 			String source = genSupport(cacheKey, mode, classInfo);
-			return genSupport(dec, cacheKey, source, classInfo);
+			return genSupport(decoder, cacheKey, source, classInfo);
 		} finally {
 			JsoniterSpi.addNewDecoder(cacheKey, decoder);
 		}
@@ -193,23 +185,23 @@ class Codegen {
 			Decoder decoder = JsoniterSpi.getDecoder(cacheKey);
 			decoder = genNull(decoder);
 			List<Extension> extensions = JsoniterSpi.getExtensions();
-			Type tip = null;
 			for (Extension extension : extensions) {
-				tip = extension.chooseImplementation(type);
+				type = extension.chooseImplementation(type);
 			}
-			Type typ = chooseImpl(tip);
+			type = chooseImpl(type);
 			for (Extension extension : extensions) {
-				decoder = extension.createDecoder(cacheKey, typ);
+				decoder = extension.createDecoder(cacheKey, type);
 				if (decoder != null) {
 					JsoniterSpi.addNewDecoder(cacheKey, decoder);
 				}
 			}
-			ClassInfo classInfo = new ClassInfo(typ);
+			ClassInfo classInfo = new ClassInfo(type);
 			decoder = CodegenImplNative.NATIVE_DECODERS.get(classInfo.clazz);
-			Decoder dec = decoder;
-			dec = genNull(decoder);
+			if (decoder != null) {
+				return decoder;
+			}
 			addPlaceholderDecoderToSupportRecursiveStructure(cacheKey);
-			return genSupport(dec, cacheKey, classInfo);
+			return genSupport(decoder, cacheKey, classInfo);
 		}
 	}
 
@@ -263,17 +255,12 @@ class Codegen {
 	 * @return
 	 */
 	private static Type chooseImplSupp2(Type[] typeArgs, Class implClazz) {
-		Type type = null;
 		if (implClazz != null) {
 			if (typeArgs.length == 0) {
-				type = implClazz;
-			} else {
-				type = GenericsHelper.createParameterizedType(typeArgs, null, implClazz);
+				return implClazz;
 			}
 		}
-
-		return type;
-
+		return GenericsHelper.createParameterizedType(typeArgs, null, implClazz);
 	}
 
 	/**
@@ -284,14 +271,12 @@ class Codegen {
 	 * @return
 	 */
 	private static Type chooseImplSupp1(Type[] typeArgs, Class clazz, Class implClazz) {
-		Type t = null;
-		Type[] typeArg = typeArgs;
 		if (Map.class.isAssignableFrom(clazz)) {
 			Type keyType = String.class;
 			Type valueType = Object.class;
-			if (typeArg.length == 2) {
-				keyType = typeArg[0];
-				valueType = typeArg[1];
+			if (typeArgs.length == 2) {
+				keyType = typeArgs[0];
+				valueType = typeArgs[1];
 			} else {
 				throw new IllegalArgumentException("can not bind to generic collection without argument types, "
 						+ "try syntax like TypeLiteral<Map<String, String>>{}");
@@ -303,10 +288,10 @@ class Codegen {
 				keyType = String.class;
 			}
 			DefaultMapKeyDecoder.registerOrGetExisting(keyType);
-			t = GenericsHelper.createParameterizedType(new Type[] { keyType, valueType }, null, clazz);
+			return GenericsHelper.createParameterizedType(new Type[] { keyType, valueType }, null, clazz);
 		}
-		t = chooseImplSupp2(typeArgs, implClazz);
-		return t;
+		return chooseImplSupp2(typeArgs, implClazz);
+
 	}
 
 	/**
@@ -317,12 +302,10 @@ class Codegen {
 	 * @return
 	 */
 	private static Type chooseImplSupp(Type[] typeArgs, Class clazz, Class implClazz) {
-		Type t = null;
-		Type[] typeArg = typeArgs;
 		if (Collection.class.isAssignableFrom(clazz)) {
 			Type compType = Object.class;
-			if (typeArg.length == 1) {
-				compType = typeArg[0];
+			if (typeArgs.length == 1) {
+				compType = typeArgs[0];
 			} else {
 				throw new IllegalArgumentException("can not bind to generic collection without argument types, "
 						+ "try syntax like TypeLiteral<List<Integer>>{}");
@@ -332,11 +315,9 @@ class Codegen {
 			} else if (clazz == Set.class) {
 				clazz = implClazz == null ? HashSet.class : implClazz;
 			}
-			t = GenericsHelper.createParameterizedType(new Type[] { compType }, null, clazz);
+			return GenericsHelper.createParameterizedType(new Type[] { compType }, null, clazz);
 		}
-
-		t = chooseImplSupp1(typeArgs, clazz, implClazz);
-		return t;
+		return chooseImplSupp1(typeArgs, clazz, implClazz);
 	}
 
 	/**
@@ -347,25 +328,19 @@ class Codegen {
 	private static Type chooseImpl(Type type) {
 		Type[] typeArgs = new Type[0];
 		Class clazz = null;
-		Type typ = null;
 		if (type instanceof ParameterizedType) {
 			ParameterizedType pType = (ParameterizedType) type;
-			if ((type instanceof ParameterizedType) && (pType.getRawType() instanceof Class)) {
+			if (pType.getRawType() instanceof Class) {
 				clazz = (Class) pType.getRawType();
 				typeArgs = pType.getActualTypeArguments();
-				typ = type;
 			}
 		} else if (type instanceof WildcardType) {
-			typ = Object.class;
-		} else {
-			if (type instanceof Class) {
-				clazz = (Class) type;
-				typ = type;
-			}
+			type = Object.class;
+		} else if (type instanceof Class) {
+			clazz = (Class) type;
 		}
 		Class implClazz = JsoniterSpi.getTypeImplementation(clazz);
-		typ = chooseImplSupp(typeArgs, clazz, implClazz);
-		return typ;
+		return chooseImplSupp(typeArgs, clazz, implClazz);
 	}
 
 	/**
