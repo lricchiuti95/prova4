@@ -399,13 +399,13 @@ class IterImpl {
 			} else {
 				throw iter.reportError(READSTRINGSLOWPATH, "invalid unicode character");
 			}
-			iter = iterImplSupp(iter, bc, n, u3, u2, i, j);
+			iter = iterImplSupp(iter, bc, n, j);
 			support.put(iter, bc);
 			return support;
 		}
 	}
 
-	private static JsonIterator iterImplSupp( int bc, final int[] n, int u3, int u2, int i, int j) {
+	private static JsonIterator iterImplSupp(JsonIterator iter, int bc, final int[] n, int j) {
 		if (bc >= 0x10000) {
 			// check if valid unicode
 			if (bc >= 0x110000) {

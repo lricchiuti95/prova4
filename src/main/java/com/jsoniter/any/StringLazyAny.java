@@ -14,9 +14,19 @@ import java.io.IOException;
  *
  */
 class StringLazyAny extends LazyAny {
+	/**
+	 * false
+	 */
 	private final static String FALSE = "false";
+	/**
+	 * cache
+	 */
 	private String cache;
+	/**
+	 * err
+	 */
 	private final String err = "Error: IOException";
+
 	/**
 	 * StringLazyAny.
 	 * 
@@ -28,27 +38,31 @@ class StringLazyAny extends LazyAny {
 		super(data, head, tail);
 	}
 
+	/**
+	 * valueType
+	 */
 	@Override
 	public ValueType valueType() {
 		return ValueType.STRING;
 	}
 
+	/**
+	 * object
+	 */
 	@Override
 	public Object object() {
 		fillCache();
 		return cache;
 	}
 
-	@Override
-	public boolean toBoolean() {
-		fillCache();
-		int len = cache.length();
-		if (len == 0) {
-			return false;
-		}
-		if (len == 5 && FALSE.equals(cache)) {
-			return false;
-		}
+	/**
+	 * toBooleanSupp
+	 * 
+	 * @param len
+	 * @return
+	 */
+	public boolean toBooleanSupp(int len) {
+		boolean supp = false;
 		for (int i = 0; i < len; i++) {
 			switch (cache.charAt(i)) {
 			case ' ':
@@ -60,12 +74,36 @@ class StringLazyAny extends LazyAny {
 			case '\r':
 				continue;
 			default:
-				return true;
+				supp = true;
 			}
 		}
-		return false;
+		return supp;
 	}
 
+	/**
+	 * toBoolean
+	 */
+	@Override
+	public boolean toBoolean() {
+		fillCache();
+		boolean supp = true;
+		int len = cache.length();
+		if (len == 0) {
+			supp = false;
+		}
+		if (len == 5 && FALSE.equals(cache)) {
+			supp = false;
+		}
+		if (supp) {
+			supp = toBooleanSupp(len);
+		}
+
+		return supp;
+	}
+
+	/**
+	 * toInt
+	 */
 	@Override
 	public int toInt() {
 		JsonIterator iter = parse();
@@ -79,6 +117,9 @@ class StringLazyAny extends LazyAny {
 		}
 	}
 
+	/**
+	 * toLong
+	 */
 	@Override
 	public long toLong() {
 		JsonIterator iter = parse();
@@ -92,6 +133,9 @@ class StringLazyAny extends LazyAny {
 		}
 	}
 
+	/**
+	 * toFloat
+	 */
 	@Override
 	public float toFloat() {
 		JsonIterator iter = parse();
@@ -105,6 +149,9 @@ class StringLazyAny extends LazyAny {
 		}
 	}
 
+	/**
+	 * toDouble
+	 */
 	@Override
 	public double toDouble() {
 		JsonIterator iter = parse();
@@ -118,12 +165,18 @@ class StringLazyAny extends LazyAny {
 		}
 	}
 
+	/**
+	 * toString
+	 */
 	@Override
 	public String toString() {
 		fillCache();
 		return cache;
 	}
 
+	/**
+	 * fillCache
+	 */
 	private void fillCache() {
 		if (cache == null) {
 			JsonIterator iter = parse();
