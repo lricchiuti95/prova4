@@ -32,52 +32,51 @@ public class JsonIterator implements Closeable {
 	 * @author MaxiBon
 	 *
 	 */
-
-	public Config configCache;
+	protected Config configCache;
 	/**
 	 * final static ValueType[] valueTypes
 	 */
 	final static ValueType[] valueTypes = new ValueType[256];
 	/**
-	 * 
+	 * in
 	 */
 	InputStream in;
 	/**
-	 * 
+	 * buf
 	 */
 	byte[] buf;
 	/**
-	 * 
+	 * head
 	 */
 	int head;
 	/**
-	 * 
+	 * tail
 	 */
 	int tail;
 	/**
+	 * skipStartedAt
 	 */
 	int skipStartedAt = -1; // skip should keep bytes starting at this pos
 	/**
-	 * 
+	 * tempObjects
 	 */
 	Map<String, Object> tempObjects = null; // used in reflection object decoder
 	/**
-	 * 
+	 * reusableSlice
 	 */
 	final Slice reusableSlice = new Slice(null, 0, 0);
 	/**
-	 * 
+	 * reusableChars
 	 */
 	char[] reusableChars = new char[32];
 	/**
-	 * 
+	 * existingObject
 	 */
 	Object existingObject = null; // the object should be bind to next
-	/**
-	 * 
-	 */
-	private Type T;
 
+	/**
+	 * fillArray
+	 */
 	private final static ReadArrayCallback fillArray = new ReadArrayCallback() {
 		/**
 		 * @throws IOException
@@ -93,10 +92,24 @@ public class JsonIterator implements Closeable {
 
 		}
 	};
-	final static String readToken = "read";
-	final static String prematureEnd = "premature end";
-	final static String deserializeToken = "deserialize";
 
+	/**
+	 * readToken
+	 */
+	final static String readToken = "read";
+
+	/**
+	 * prematureEnd
+	 */
+	final static String prematureEnd = "premature end";
+
+	/**
+	 * deserializeToken
+	 */
+	final static String deserializeToken = "deserialize";
+	/**
+	 * fillObject
+	 */
 	private final static ReadObjectCallback fillObject = new ReadObjectCallback() {
 		/**
 		 * @throws IOException
@@ -135,6 +148,14 @@ public class JsonIterator implements Closeable {
 		valueTypes['{'] = ValueType.OBJECT;
 	}
 
+	/**
+	 * JsonIterator
+	 * 
+	 * @param in
+	 * @param buf
+	 * @param head
+	 * @param tail
+	 */
 	private JsonIterator(InputStream in, byte[] buf, int head, int tail) {
 		this.in = in;
 		this.buf = buf;
@@ -149,52 +170,110 @@ public class JsonIterator implements Closeable {
 		this(null, new byte[0], 0, 0);
 	}
 
+	/**
+	 * parse
+	 * 
+	 * @param inn
+	 * @param bufSizee
+	 * @return
+	 */
 	public static JsonIterator parse(InputStream inn, int bufSizee) {
 		enableStreamingSupport();
 		return new JsonIterator(inn, new byte[bufSizee], 0, 0);
 	}
 
+	/**
+	 * parse
+	 * 
+	 * @param buff
+	 * @return
+	 */
 	public static JsonIterator parse(byte[] buff) {
 		return new JsonIterator(null, buff, 0, buff.length);
 	}
 
+	/**
+	 * parse
+	 * 
+	 * @param buff
+	 * @param head1
+	 * @param tail1
+	 * @return
+	 */
 	public static JsonIterator parse(byte[] buff, int head1, int tail1) {
 		return new JsonIterator(null, buff, head1, tail1);
 	}
 
+	/**
+	 * parse
+	 * 
+	 * @param str
+	 * @return
+	 */
 	public static JsonIterator parse(String str) {
 		return parse(str.getBytes());
 	}
 
+	/**
+	 * parse
+	 * 
+	 * @param slice
+	 * @return
+	 */
 	public static JsonIterator parse(Slice slice) {
 		return new JsonIterator(null, slice.data(), slice.head(), slice.tail());
 	}
 
+	/**
+	 * reset
+	 * 
+	 * @param buff
+	 */
 	public final void reset(byte[] buff) {
 		this.buf = buff;
 		this.head = 0;
 		this.tail = buff.length;
 	}
 
+	/**
+	 * reset
+	 * 
+	 * @param buff
+	 * @param head1
+	 * @param tail1
+	 */
 	public final void reset(byte[] buff, int head1, int tail1) {
 		this.buf = buff;
 		this.head = head1;
 		this.tail = tail1;
 	}
 
-	public final void reset(Slice value) {
+	/**
+	 * reset
+	 * 
+	 * @param value
+	 */
+	protected final void reset(Slice value) {
 		this.buf = value.data();
 		this.head = value.head();
 		this.tail = value.tail();
 	}
 
+	/**
+	 * reset
+	 * 
+	 * @param inn
+	 */
 	public final void reset(InputStream inn) {
 		JsonIterator.enableStreamingSupport();
 		this.in = inn;
 		this.head = 0;
 		this.tail = 0;
 	}
+
 	/**
+	 * close
+	 * 
 	 * @throws IOException
 	 */
 	public final void close() throws IOException {
@@ -203,13 +282,23 @@ public class JsonIterator implements Closeable {
 		}
 	}
 
-	final void unreadByte() {
+	/**
+	 * unreadByte
+	 */
+	protected final void unreadByte() {
 		if (head == 0) {
 			throw reportError("unreadByte", "unread too many bytes");
 		}
 		head--;
 	}
 
+	/**
+	 * reportError
+	 * 
+	 * @param op
+	 * @param msg
+	 * @return
+	 */
 	public final JsonException reportError(String op, String msg) {
 		int peekStart = head - 10;
 		if (peekStart < 0) {
@@ -223,7 +312,12 @@ public class JsonIterator implements Closeable {
 		throw new JsonException(op + ": " + msg + ", head: " + head + ", peek: " + peek + ", buf: " + new String(buf));
 	}
 
-	public final String currentBuffer() {
+	/**
+	 * currentBuffer
+	 * 
+	 * @return
+	 */
+	protected final String currentBuffer() {
 		int peekStart = head - 10;
 		if (peekStart < 0) {
 			peekStart = 0;
@@ -231,10 +325,13 @@ public class JsonIterator implements Closeable {
 		String peek = new String(buf, peekStart, head - peekStart);
 		return "head: " + head + ", peek: " + peek + ", buf: " + new String(buf);
 	}
+
 	/**
+	 * readNull
+	 * 
 	 * @throws IOException
 	 */
-	public final boolean readNull() throws IOException {
+	protected final boolean readNull() throws IOException {
 		byte c = IterImpl.nextToken(this);
 		if (c != 'n') {
 			unreadByte();
@@ -244,7 +341,10 @@ public class JsonIterator implements Closeable {
 		IterImpl.skipFixedBytes(this, n); // null
 		return true;
 	}
+
 	/**
+	 * readBoolean
+	 * 
 	 * @throws IOException
 	 */
 	public final boolean readBoolean() throws IOException {
@@ -261,36 +361,61 @@ public class JsonIterator implements Closeable {
 		}
 		throw reportError("readBoolean", "expect t or f, found: " + c);
 	}
+
 	/**
+	 * readShort
+	 * 
 	 * @throws IOException
 	 */
 	public final short readShort() throws IOException {
 		int v = readInt();
 		if (Short.MIN_VALUE <= v && v <= Short.MAX_VALUE) {
-			return (short) v;
+			return intToShort(v);
 		} else {
 			throw reportError("readShort", "short overflow: " + v);
 		}
 	}
+	
 	/**
+	 * 
+	 * @param intero
+	 * @return
+	 */
+	private short intToShort (int intero){
+		Integer shortI = intero;
+		return shortI.shortValue();
+	}
+
+	/**
+	 * readInt
+	 * 
 	 * @throws IOException
 	 */
 	public final int readInt() throws IOException {
 		return IterImplNumber.readInt(this);
 	}
+
 	/**
+	 * readLong
+	 * 
 	 * @throws IOException
 	 */
 	public final long readLong() throws IOException {
 		return IterImplNumber.readLong(this);
 	}
+
 	/**
+	 * readArray
+	 * 
 	 * @throws IOException
 	 */
 	public final boolean readArray() throws IOException {
 		return IterImplArray.readArray(this);
 	}
+
 	/**
+	 * readNumberAsString
+	 * 
 	 * @throws IOException
 	 */
 	public String readNumberAsString() throws IOException {
@@ -300,29 +425,61 @@ public class JsonIterator implements Closeable {
 	/**
 	 * Public Interface ReadObjectCallback.
 	 * 
+	 * @author MaxiBon boolean handle(JsonIterator iter, String field, Object
+	 *         attachment) throws IOException;
 	 * @author MaxiBon
-	 * boolean handle(JsonIterator iter, String field, Object attachment)
-	 * throws IOException;
-	 * @author MaxiBon
-	 *@throws IOException
+	 * @throws IOException
 	 */
 	public static interface ReadArrayCallback {
-		
+		/**
+		 * handle
+		 * 
+		 * @param iter
+		 * @param attachment
+		 * @return
+		 * @throws IOException
+		 */
 		boolean handle(JsonIterator iter, Object attachment) throws IOException;
 	}
 
+	/**
+	 * readArrayCB
+	 * 
+	 * @param callback
+	 * @param attachment
+	 * @return
+	 * @throws IOException
+	 */
 	public final boolean readArrayCB(ReadArrayCallback callback, Object attachment) throws IOException {
 		return IterImplArray.readArrayCB(this, callback, attachment);
 	}
 
+	/**
+	 * readString
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public final String readString() throws IOException {
 		return IterImplString.readString(this);
 	}
 
+	/**
+	 * readStringAsSlice
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public final Slice readStringAsSlice() throws IOException {
 		return IterImpl.readSlice(this);
 	}
 
+	/**
+	 * readObject
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public final String readObject() throws IOException {
 		return IterImplObject.funReadObject(this);
 	}
@@ -335,29 +492,54 @@ public class JsonIterator implements Closeable {
 	 */
 	public static interface ReadObjectCallback {
 		/**
-		 * boolean handle(JsonIterator iter, String field, Object attachment) throws
-		 * IOException;
+		 * boolean handle(JsonIterator iter, String field, Object attachment)
+		 * throws IOException;
 		 * 
 		 * @author MaxiBon
 		 * @throws IOException
 		 *
 		 */
 		boolean handle(JsonIterator iter, String field, Object attachment) throws IOException;
-		
+
 	}
 
+	/**
+	 * readObjectCB
+	 * 
+	 * @param cb
+	 * @param attachment
+	 * @throws IOException
+	 */
 	public final void readObjectCB(ReadObjectCallback cb, Object attachment) throws IOException {
 		IterImplObject.readObjectCB(this, cb, attachment);
 	}
 
+	/**
+	 * readFloat
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public final float readFloat() throws IOException {
 		return IterImplNumber.readFloat(this);
 	}
 
+	/**
+	 * readDouble
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public final double readDouble() throws IOException {
 		return IterImplNumber.readDouble(this);
 	}
 
+	/**
+	 * readBigDecimal
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public final BigDecimal readBigDecimal() throws IOException {
 		// skip whitespace by read next
 		ValueType valueType = whatIsNext();
@@ -371,6 +553,12 @@ public class JsonIterator implements Closeable {
 		return new BigDecimal(IterImplForStreaming.readNumber(this));
 	}
 
+	/**
+	 * readBigInteger
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public final BigInteger readBigInteger() throws IOException {
 		// skip whitespace by read next
 		ValueType valueType = whatIsNext();
@@ -384,6 +572,12 @@ public class JsonIterator implements Closeable {
 		return new BigInteger(IterImplForStreaming.readNumber(this));
 	}
 
+	/**
+	 * readAny
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public final Any readAny() throws IOException {
 		try {
 			return IterImpl.readAny(this);
@@ -392,6 +586,12 @@ public class JsonIterator implements Closeable {
 		}
 	}
 
+	/**
+	 * read
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public final Object read() throws IOException {
 		try {
 			ValueType valueType = whatIsNext();
@@ -414,7 +614,6 @@ public class JsonIterator implements Closeable {
 				Map map = new HashMap(n);
 				readObjectCB(fillObject, map);
 				return map;
-			case INVALID:
 			default:
 				throw reportError(readToken, "unexpected value type: " + valueType);
 			}
@@ -424,7 +623,8 @@ public class JsonIterator implements Closeable {
 	}
 
 	/**
-	 * try to bind to existing object, returned object might not the same instance
+	 * try to bind to existing object, returned object might not the same
+	 * instance
 	 *
 	 * @param existingObjects
 	 *            the object instance to reuse
@@ -450,6 +650,11 @@ public class JsonIterator implements Closeable {
 		return typeT;
 	}
 
+	/**
+	 * currentConfig
+	 * 
+	 * @return
+	 */
 	private Config currentConfig() {
 		if (configCache == null) {
 			configCache = JsoniterSpi.getCurrentConfig();
@@ -458,7 +663,8 @@ public class JsonIterator implements Closeable {
 	}
 
 	/**
-	 * try to bind to existing object, returned object might not the same instance
+	 * try to bind to existing object, returned object might not the same
+	 * instance
 	 *
 	 * @param typeLiteral1
 	 *            the type object
@@ -488,6 +694,13 @@ public class JsonIterator implements Closeable {
 		return typeT;
 	}
 
+	/**
+	 * read
+	 * 
+	 * @param clazz
+	 * @return
+	 * @throws IOException
+	 */
 	public final <T> T read(Class<T> clazz) throws IOException {
 		Object o = read((Type) clazz);
 		T typeT = null;
@@ -498,6 +711,13 @@ public class JsonIterator implements Closeable {
 
 	}
 
+	/**
+	 * read
+	 * 
+	 * @param typeLiteral
+	 * @return
+	 * @throws IOException
+	 */
 	public final <T> T read(TypeLiteral<T> typeLiteral) throws IOException {
 		Object o = null;
 		T typeT = null;
@@ -509,6 +729,13 @@ public class JsonIterator implements Closeable {
 
 	}
 
+	/**
+	 * read
+	 * 
+	 * @param type
+	 * @return
+	 * @throws IOException
+	 */
 	public final Object read(Type type) throws IOException {
 		try {
 
@@ -519,17 +746,36 @@ public class JsonIterator implements Closeable {
 		}
 	}
 
+	/**
+	 * whatIsNext
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public ValueType whatIsNext() throws IOException {
 		ValueType valueType = valueTypes[IterImpl.nextToken(this)];
 		unreadByte();
 		return valueType;
 	}
 
+	/**
+	 * skip
+	 * 
+	 * @throws IOException
+	 */
 	public void skip() throws IOException {
 		IterImplSkip.skip(this);
 	}
 
-	public static final <T> T deserialize(Config config, String input, Class<T> clazz) {
+	/**
+	 * deserialize
+	 * 
+	 * @param config
+	 * @param input
+	 * @param clazz
+	 * @return
+	 */
+	protected static final <T> T deserialize(Config config, String input, Class<T> clazz) {
 		JsoniterSpi.setCurrentConfig(config);
 		try {
 			return deserialize(input.getBytes(), clazz);
@@ -538,11 +784,26 @@ public class JsonIterator implements Closeable {
 		}
 	}
 
+	/**
+	 * deserialize
+	 * 
+	 * @param input
+	 * @param clazz
+	 * @return
+	 */
 	public static final <T> T deserialize(String input, Class<T> clazz) {
 		return deserialize(input.getBytes(), clazz);
 	}
 
-	public static final <T> T deserialize(Config config, String input, TypeLiteral<T> typeLiteral) {
+	/**
+	 * deserialize
+	 * 
+	 * @param config
+	 * @param input
+	 * @param typeLiteral
+	 * @return
+	 */
+	protected static final <T> T deserialize(Config config, String input, TypeLiteral<T> typeLiteral) {
 		JsoniterSpi.setCurrentConfig(config);
 		try {
 			return deserialize(input.getBytes(), typeLiteral);
@@ -551,11 +812,26 @@ public class JsonIterator implements Closeable {
 		}
 	}
 
-	public static final <T> T deserialize(String input, TypeLiteral<T> typeLiteral) {
+	/**
+	 * deserialize
+	 * 
+	 * @param input
+	 * @param typeLiteral
+	 * @return
+	 */
+	protected static final <T> T deserialize(String input, TypeLiteral<T> typeLiteral) {
 		return deserialize(input.getBytes(), typeLiteral);
 	}
 
-	public static final <T> T deserialize(Config config, byte[] input, Class<T> clazz) {
+	/**
+	 * deserialize
+	 * 
+	 * @param config
+	 * @param input
+	 * @param clazz
+	 * @return
+	 */
+	protected static final <T> T deserialize(Config config, byte[] input, Class<T> clazz) {
 		JsoniterSpi.setCurrentConfig(config);
 		try {
 			return deserialize(input, clazz);
@@ -564,7 +840,14 @@ public class JsonIterator implements Closeable {
 		}
 	}
 
-	public static final <T> T deserialize(byte[] input, Class<T> clazz) {
+	/**
+	 * deserialize
+	 * 
+	 * @param input
+	 * @param clazz
+	 * @return
+	 */
+	protected static final <T> T deserialize(byte[] input, Class<T> clazz) {
 		int lastNotSpacePos = findLastNotSpacePos(input);
 		JsonIterator iter = JsonIteratorPool.borrowJsonIterator();
 		iter.reset(input, 0, lastNotSpacePos);
@@ -585,6 +868,14 @@ public class JsonIterator implements Closeable {
 		}
 	}
 
+	/**
+	 * deserialize
+	 * 
+	 * @param config
+	 * @param input
+	 * @param typeLiteral
+	 * @return
+	 */
 	public static final <T> T deserialize(Config config, byte[] input, TypeLiteral<T> typeLiteral) {
 		JsoniterSpi.setCurrentConfig(config);
 		try {
@@ -594,6 +885,13 @@ public class JsonIterator implements Closeable {
 		}
 	}
 
+	/**
+	 * deserialize
+	 * 
+	 * @param input
+	 * @param typeLiteral
+	 * @return
+	 */
 	public static final <T> T deserialize(byte[] input, TypeLiteral<T> typeLiteral) {
 		int lastNotSpacePos = findLastNotSpacePos(input);
 		JsonIterator iter = JsonIteratorPool.borrowJsonIterator();
@@ -613,6 +911,13 @@ public class JsonIterator implements Closeable {
 		}
 	}
 
+	/**
+	 * deserialize
+	 * 
+	 * @param config
+	 * @param input
+	 * @return
+	 */
 	public static final Any deserialize(Config config, String input) {
 		JsoniterSpi.setCurrentConfig(config);
 		try {
@@ -622,10 +927,23 @@ public class JsonIterator implements Closeable {
 		}
 	}
 
+	/**
+	 * deserialize
+	 * 
+	 * @param input
+	 * @return
+	 */
 	public static final Any deserialize(String input) {
 		return deserialize(input.getBytes());
 	}
 
+	/**
+	 * deserialize
+	 * 
+	 * @param config
+	 * @param input
+	 * @return
+	 */
 	public static final Any deserialize(Config config, byte[] input) {
 		JsoniterSpi.setCurrentConfig(config);
 		try {
@@ -635,6 +953,12 @@ public class JsonIterator implements Closeable {
 		}
 	}
 
+	/**
+	 * deserialize
+	 * 
+	 * @param input
+	 * @return
+	 */
 	public static final Any deserialize(byte[] input) {
 		int lastNotSpacePos = findLastNotSpacePos(input);
 		JsonIterator iter = JsonIteratorPool.borrowJsonIterator();
@@ -654,6 +978,12 @@ public class JsonIterator implements Closeable {
 		}
 	}
 
+	/**
+	 * findLastNotSpacePos
+	 * 
+	 * @param input
+	 * @return
+	 */
 	private static int findLastNotSpacePos(byte[] input) {
 		for (int i = input.length - 1; i >= 0; i--) {
 			byte c = input[i];
@@ -664,12 +994,20 @@ public class JsonIterator implements Closeable {
 		return 0;
 	}
 
+	/**
+	 * setMode
+	 * 
+	 * @param mode
+	 */
 	public static void setMode(DecodingMode mode) {
 		Config newConfig = JsoniterSpi.getDefaultConfig().copyBuilder().decodingMode(mode).build();
 		JsoniterSpi.setDefaultConfig(newConfig);
 		JsoniterSpi.setCurrentConfig(newConfig);
 	}
 
+	/**
+	 * enableStreamingSupport
+	 */
 	public static void enableStreamingSupport() {
 		boolean isStreamingEnabled = false;
 
@@ -686,4 +1024,3 @@ public class JsonIterator implements Closeable {
 		}
 	}
 }
-
